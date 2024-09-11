@@ -1,7 +1,7 @@
 // pointers_assignment.c
 // This program implements three functions using pointers: swap, findMax, and reverseArray.
 
-#include <stdio.h>
+*#include <stdio.h>
 #include <stdbool.h>
 
 #define MAX 100  // Maximum number of non-zero elements in the sparse matrix
