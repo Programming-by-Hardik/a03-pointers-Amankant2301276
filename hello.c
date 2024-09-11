@@ -1,117 +1,127 @@
 // pointers_assignment.c
 // This program implements three functions using pointers: swap, findMax, and reverseArray.
 
-*#include <stdio.h>
+#include <stdio.h>
 #include <stdbool.h>
 
-#define MAX 100  // Maximum number of non-zero elements in the sparse matrix
-#define N 4      // Number of columns in the original matrix (modifiable)
-
 // Function prototypes
-void createSparseMatrix(int sparseMatrix[][3], int originalMatrix[][N], int rows, int cols);
-void printSparseMatrix(int sparseMatrix[][3], int nonZeroCount);
-bool testCreateSparseMatrix();
-bool testPrintSparseMatrix();
+void swap(int *a, int *b);
+int findMax(int *arr, int length);
+void reverseArray(int *arr, int length);
+
+// Test functions
+bool testSwap();
+bool testFindMax();
+bool testReverseArray();
 
 int main() {
-    // Run test cases
-    if (testCreateSparseMatrix()) {
-        printf("testCreateSparseMatrix PASSED\n");
+    // Run tests
+    if (testSwap()) {
+        printf("testSwap PASSED\n");
     } else {
-        printf("testCreateSparseMatrix FAILED\n");
+        printf("testSwap FAILED\n");
     }
 
-    if (testPrintSparseMatrix()) {
-        printf("testPrintSparseMatrix PASSED\n");
+    if (testFindMax()) {
+        printf("testFindMax PASSED\n");
     } else {
-        printf("testPrintSparseMatrix FAILED\n");
+        printf("testFindMax FAILED\n");
+    }
+
+    if (testReverseArray()) {
+        printf("testReverseArray PASSED\n");
+    } else {
+        printf("testReverseArray FAILED\n");
     }
 
     return 0;
 }
 
-// Function to convert a matrix into sparse matrix format
-void createSparseMatrix(int sparseMatrix[][3], int originalMatrix[][N], int rows, int cols) {
-    int nonZeroCount = 0;
-    sparseMatrix[nonZeroCount][0] = rows; // Number of rows
-    sparseMatrix[nonZeroCount][1] = cols; // Number of columns
-    sparseMatrix[nonZeroCount][2] = 0;    // Initialize non-zero count
+//---------------------------------
+// FUNCTION DEFINITIONS
+//---------------------------------
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            if (originalMatrix[i][j] != 0) {
-                nonZeroCount++;
-                sparseMatrix[nonZeroCount][0] = i; // Row index
-                sparseMatrix[nonZeroCount][1] = j; // Column index
-                sparseMatrix[nonZeroCount][2] = originalMatrix[i][j]; // Value
-            }
+// Function to swap two integers using pointers
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Time Complexity: O(1)
+// Space Complexity: O(1)
+
+// Function to find the maximum value in an array using pointers
+int findMax(int *arr, int length) {
+    int max = *arr; // Assume the first element is the max initially
+    for (int i = 1; i < length; i++) {
+        if (*(arr + i) > max) {
+            max = *(arr + i);
         }
     }
-    sparseMatrix[0][2] = nonZeroCount; // Update the count of non-zero elements
+    return max;
 }
 
-// Function to print sparse matrix representation
-void printSparseMatrix(int sparseMatrix[][3], int nonZeroCount) {
-    printf("Row\tColumn\tValue\n");
-    for (int i = 0; i <= nonZeroCount; i++) {
-        printf("%d\t%d\t%d\n", sparseMatrix[i][0], sparseMatrix[i][1], sparseMatrix[i][2]);
+// Time Complexity: O(n), where n is the number of elements in the array
+// Space Complexity: O(1)
+
+// Function to reverse an array using pointers
+void reverseArray(int *arr, int length) {
+    int *start = arr;             // Pointer to the start of the array
+    int *end = arr + length - 1;  // Pointer to the end of the array
+
+    while (start < end) {
+        swap(start, end);
+        start++;
+        end--;
     }
 }
 
-//--------------------------------------------------------
-//DON'T CHANGE THE CODE BELOW THIS!
-//--------------------------------------------------------
-// TEST CASES
+// Time Complexity: O(n), where n is the number of elements in the array
+// Space Complexity: O(1)
 
-// Test function for createSparseMatrix
-bool testCreateSparseMatrix() {
-    int originalMatrix[4][N] = {
-        {0, 0, 3, 0},
-        {0, 4, 0, 0},
-        {0, 0, 0, 5},
-        {0, 2, 0, 6}
-    };
+//---------------------------------
+// TEST CASES - Don't change the code below this.
+//---------------------------------
 
-    int expectedSparseMatrix[MAX][3] = {
-        {4, 4, 5},   // 4x4 matrix with 5 non-zero elements
-        {0, 2, 3},   // Original matrix[0][2] = 3
-        {1, 1, 4},   // Original matrix[1][1] = 4
-        {2, 3, 5},   // Original matrix[2][3] = 5
-        {3, 1, 2},   // Original matrix[3][1] = 2
-        {3, 3, 6}    // Original matrix[3][3] = 6
-    };
+// Test case for swap function
+bool testSwap() {
+    int x = 5, y = 10;
+    swap(&x, &y);
 
-    int sparseMatrix[MAX][3];
-    createSparseMatrix(sparseMatrix, originalMatrix, 4, N);
+    if (x == 10 && y == 5) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
-    // Compare the sparseMatrix with the expectedSparseMatrix
-    for (int i = 0; i <= expectedSparseMatrix[0][2]; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (sparseMatrix[i][j] != expectedSparseMatrix[i][j]) {
-                return false;  // If any value doesn't match, test fails
-            }
+// Test case for findMax function
+bool testFindMax() {
+    int arr[] = {3, 1, 4, 1, 5, 9, 2, 6, 5};
+    int length = sizeof(arr) / sizeof(arr[0]);
+    int maxValue = findMax(arr, length);
+
+    if (maxValue == 9) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Test case for reverseArray function
+bool testReverseArray() {
+    int arr[] = {1, 2, 3, 4, 5};
+    int expected[] = {5, 4, 3, 2, 1};
+    int length = sizeof(arr) / sizeof(arr[0]);
+
+    reverseArray(arr, length);
+
+    // Check if the array matches the expected reversed array
+    for (int i = 0; i < length; i++) {
+        if (arr[i] != expected[i]) {
+            return false;
         }
     }
-
-    return true;  // Test passes if all values match
-}
-
-// Test function for printSparseMatrix
-bool testPrintSparseMatrix() {
-    // Define a sparse matrix with 5 non-zero elements
-    int sparseMatrix[MAX][3] = {
-        {4, 4, 5},   // 4x4 matrix with 5 non-zero elements
-        {0, 2, 3},   // Original matrix[0][2] = 3
-        {1, 1, 4},   // Original matrix[1][1] = 4
-        {2, 3, 5},   // Original matrix[2][3] = 5
-        {3, 1, 2},   // Original matrix[3][1] = 2
-        {3, 3, 6}    // Original matrix[3][3] = 6
-    };
-
-    // Simulate a successful print (visual inspection may be needed for testing this)
-    printf("Expected Sparse Matrix Output:\n");
-    printSparseMatrix(sparseMatrix, sparseMatrix[0][2]);
-
-    // Since printSparseMatrix only prints the output, we assume it passes if the format is correct
     return true;
-}*
+}
